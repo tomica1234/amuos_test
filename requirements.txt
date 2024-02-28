@@ -1,0 +1,6 @@
+streamlit
+streamlit_sortables
+gspread
+google-auth
+pandas
+gspread_dataframe
