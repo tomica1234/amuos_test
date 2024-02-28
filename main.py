@@ -5,7 +5,7 @@ from streamlit_sortables import sort_items
 import pandas as pd
 from gspread_dataframe import get_as_dataframe, set_with_dataframe
 
-
+st.session_state['name'] = 'このカーナンバーは申請されていません。公式SNSのDMにて参加申請をしてください。'
 service_account_info = st.secrets["google_service_account"]
 
 # 認証情報オブジェクトを生成
