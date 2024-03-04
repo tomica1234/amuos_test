@@ -6,7 +6,7 @@ import gspread
 
 service_account_info = st.secrets["google_service_account"]
 
-st.subheader('アムオスF1順位予想2024')
+st.subheader('テスト')
 
 #if 'car_number' in st.session_state:
 if st.session_state['name'] == 'このカーナンバーは申請されていません。公式SNSのDMにて参加申請をしてください。':
@@ -46,9 +46,34 @@ else:
 
         spreadsheet = client.open('F1順位予想企画2024')
         worksheet = spreadsheet.worksheet('テスト用')
-        data_qual = list(map(lambda item: driver_number[item], sorted_qual))
-        data_race = list(map(lambda item: driver_number[item], sorted_race))
-        data_ret = list(map(lambda item: driver_number[item], sorted_ret))
+
+        fixed_order = [1, 11, 44, 63, 16, 55, 4, 81, 14, 18, 10, 31, 23, 2, 22, 3, 77, 24, 27, 20]
+        # 予選とレースの結果を格納するリストを初期化
+        data_qual = []
+        data_race = []
+
+        # 予選結果を data_qual リストに格納
+        for driver_num in fixed_order:
+            driver_name = list(driver_number.keys())[list(driver_number.values()).index(driver_num)]  #ナンバーからドライバー名を逆引き
+            if driver_name in sorted_qual:
+                qual_position = sorted_qual.index(driver_name) + 1
+                data_qual.append(qual_position)
+            else:
+                data_qual.append(None)  # 予選データがない場合は None を追加
+
+        # レース結果を data_race リストに格納、リタイアした場合は 'ret' を格納
+        for driver_num in fixed_order:
+            driver_name = list(driver_number.keys())[list(driver_number.values()).index(driver_num)]  #ナンバーからドライバー名を逆引き
+            if driver_name in sorted_ret:
+                data_race.append("ret")
+            elif driver_name in sorted_race:
+                race_position = sorted_race.index(driver_name) + 1
+                data_race.append(race_position)
+            else:
+                data_race.append(None)  # レースデータがない場合は None を追加
+
+     
+
 
 
         all_values = worksheet.get_all_values()
@@ -85,17 +110,17 @@ else:
 
             worksheet.update_cell(1, target_col, st.session_state['car_number'])
             worksheet.update_cell(1, target_col+1, st.session_state['car_number'])
-            worksheet.update_cell(1, target_col+2, st.session_state['car_number'])
+            #worksheet.update_cell(1, target_col+2, st.session_state['car_number'])
 
             worksheet.update_cell(2, target_col, st.session_state['race'])
             worksheet.update_cell(2, target_col+1, st.session_state['race'])
-            worksheet.update_cell(2, target_col+2, st.session_state['race'])
+            #worksheet.update_cell(2, target_col+2, st.session_state['race'])
 
             worksheet.update_cell(3, target_col, '予選')
             worksheet.update_cell(3, target_col+1, '決勝')
-            worksheet.update_cell(3, target_col+2, '決勝リタイア')
-
-
+            #worksheet.update_cell(3, target_col+2, '決勝リタイア')
+            
+ 
             # dataリストの値を指定した列に縦に入れる
           # このリストを必要に応じて調整してください
             for i, value in enumerate(data_qual, start=4):
@@ -104,8 +129,8 @@ else:
             for i, value in enumerate(data_race, start=4):
                 worksheet.update_cell(i, target_col+1, value)
 
-            for i, value in enumerate(data_ret, start=4):
-                worksheet.update_cell(i, target_col+2, value)
+            #for i, value in enumerate(data_ret, start=4):
+             #   worksheet.update_cell(i, target_col+2, value)
 
             st.write('提出完了しました')
 

@@ -16,7 +16,7 @@ scopes = ['https://www.googleapis.com/auth/spreadsheets','https://www.googleapis
 creds = Credentials.from_service_account_info(service_account_info,scopes=scopes)
 client = gspread.authorize(creds)
 
-st.subheader('アムオスF1順位予想2024')
+st.subheader('テスト')
 
 spreadsheet = client.open('F1順位予想企画2024')
 
